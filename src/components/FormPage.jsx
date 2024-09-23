@@ -1,14 +1,30 @@
 // src/components/FormPage.jsx
-import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { Box, Button, Dialog } from '@mui/material';
-import ElementWrapper from './ElementWrapper';
-import ElementSelector from './ElementSelector';
-import AddIcon from '@mui/icons-material/Add';
-import { getSelectedContent, getSelectedContentType, setPageContent, setSelectedContent, setSelectedContentType } from '../slices/formSlice';
-import { ContentType } from '../utils/constants';
+import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  Box,
+  Button,
+  ButtonBase,
+  Dialog,
+  Divider,
+  Tooltip,
+  Typography,
+} from "@mui/material";
+import ElementWrapper from "./ElementWrapper";
+import ElementSelector from "./ElementSelector";
+import AddIcon from "@mui/icons-material/Add";
+import {
+  addElement,
+  getSelectedContent,
+  getSelectedContentType,
+  setPageContent,
+  setSelectedContent,
+  setSelectedContentType,
+} from "../slices/formSlice";
+import { ContentType } from "../utils/constants";
 // import { Draggable } from 'react-drag-reorder';
-import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import NoContentImage from "../assets/no-content.png";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
 const FormPage = () => {
   const selectedContent = useSelector(getSelectedContent);
@@ -21,7 +37,27 @@ const FormPage = () => {
   const currentPage = pages.find((page) => page.id === currentPageId);
 
   if (!currentPage) {
-    return <Box sx={{ flexGrow: 1, padding: 2 ,border:'2px solid #ccc'}}>No Page Selected</Box>;
+    return (
+      <Box
+        sx={{
+          flexGrow: 1,
+          padding: 2,
+          justifyContent: "center",
+          alignItems: "center",
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          borderRadius: 4,
+          backgroundColor: "white",
+        }}
+        className="box-shadow"
+      >
+        <img width={100} height={100} src={NoContentImage} alt="no content" />
+        <Typography sx={{ color: "#4c4c4c", fontSize: "32px" }}>
+          No Page Selected
+        </Typography>
+      </Box>
+    );
   }
 
   const handleAddWidgetClick = () => {
@@ -31,38 +67,63 @@ const FormPage = () => {
   const handleCloseElementSelector = () => {
     setOpenElementSelector(false);
   };
+  const handleElementSelect = (type) => {
+    const newElement = {
+      id: Date.now().toString() + "question",
+      type: type,
+      columns: 1,
+      properties: {
+        label: "Type your question here",
+        placeholder: "Type your placeholder here",
+        isRequired: false,
+        type: "short-text",
+      },
+    };
 
-  const handleOnDragEnd = (result) => {
-    const { destination, source } = result;
-     console.log(destination,'sdsds');
-    // If there's no destination, return (dropped outside the list)
-    if (!destination) return;
-
-    // // If the item is dropped at the same place, do nothing
-    // if (source.index === destination.index) return;
-
-    // // Create a new layouts array with reordered items
-    // const updatedLayouts = Array.from(currentPage.layouts);
-    // const [reorderedItem] = updatedLayouts.splice(source.index, 1); // Remove dragged item
-    // updatedLayouts.splice(destination.index, 0, reorderedItem); // Insert it in the new position
-
-    // // Update state with new layouts order
-    // dispatch(setPageContent({
-    //   ...currentPage,
-    //   layouts: updatedLayouts,
-    // }));
+    dispatch(addElement({ pageId: currentPageId, element: newElement }));
   };
+
+  // const handleOnDragEnd = (result) => {
+  //   const { destination, source } = result;
+  //   console.log(destination, "sdsds");
+  //   // If there's no destination, return (dropped outside the list)
+  //   if (!destination) return;
+
+  //   // // If the item is dropped at the same place, do nothing
+  //   // if (source.index === destination.index) return;
+
+  //   // // Create a new layouts array with reordered items
+  //   // const updatedLayouts = Array.from(currentPage.layouts);
+  //   // const [reorderedItem] = updatedLayouts.splice(source.index, 1); // Remove dragged item
+  //   // updatedLayouts.splice(destination.index, 0, reorderedItem); // Insert it in the new position
+
+  //   // // Update state with new layouts order
+  //   // dispatch(setPageContent({
+  //   //   ...currentPage,
+  //   //   layouts: updatedLayouts,
+  //   // }));
+  // };
 
   // const handlePageClick = (page) => {
   //   dispatch(setSelectedContent(page));
   //   dispatch(setSelectedContentType(ContentType.PAGE));
   // }
-  
+
   //  console.log(currentPage,'page');
-   console.log(currentPage.layouts,'content selected');
+  console.log(currentPage.layouts, "content selected");
   return (
-    <Box sx={{ flexGrow: 1, padding: 0,border:'2px solid #ccc',overflowY:'scroll'}}>
-      <DragDropContext onDragEnd={handleOnDragEnd}>
+    <Box
+      sx={{
+        flexGrow: 1,
+        padding: 0,
+        overflowY: "auto",
+        scrollbarWidth: "thin",
+        borderRadius: 4,
+        backgroundColor: "white",
+      }}
+      className="box-shadow"
+    >
+      {/* <DragDropContext onDragEnd={handleOnDragEnd}>
       <Droppable droppableId="droppable">
         {(provided) => (
           <div
@@ -92,28 +153,63 @@ const FormPage = () => {
           </div>
         )}
       </Droppable>
-    </DragDropContext>
-      {/* {currentPage.layouts.map((layout,index) => (
+    </DragDropContext> */}
+      {currentPage.layouts.map((layout, index) => (
         <ElementWrapper
           // key={layout.id}
           key={index}
           index={index}
           layout={layout}
+          border={"#388bff"}
         />
-      ))} */}
-    
-      <Box sx={{display:'flex',justifyContent:'center'}}>
-      <Button
-      
-        variant="outlined"
-        startIcon={<AddIcon />}
-        onClick={handleAddWidgetClick}
-        sx={{ margin: '20px auto' }}
+      ))}
+
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          position: "relative",
+          my: 5,
+        }}
       >
-        Add Widget
-      </Button>
+        <Divider
+          variant="fullWidth"
+          flexItem
+          sx={{
+            borderColor: "rgba(0, 0, 0, 0.12)",
+            width: "50%",
+            height: "1px",
+            my: "auto",
+          }}
+        />
+        <Tooltip title={"Add Widget"} placement="top" arrow>
+          <ButtonBase
+            onClick={() => handleElementSelect("question")}
+            sx={{
+              margin: "20px auto",
+              width: 50,
+              height: 50,
+              background: "rgb(127, 127, 230)",
+              borderRadius: "100%",
+              color: "white",
+              position: "absolute",
+              left: "49%",
+            }}
+          >
+            <AddIcon />
+          </ButtonBase>
+        </Tooltip>
+        <Divider
+          variant="fullWidth"
+          flexItem
+          sx={{
+            borderColor: "rgba(0, 0, 0, 0.12)",
+            width: "50%",
+            height: "1px",
+            my: "auto",
+          }}
+        />
       </Box>
-      
 
       <Dialog open={openElementSelector} onClose={handleCloseElementSelector}>
         <ElementSelector

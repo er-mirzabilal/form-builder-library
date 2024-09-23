@@ -1,8 +1,8 @@
 // src/components/TopBar.jsx
-import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { updateFormName } from '../slices/formSlice';
-import { AppBar, Toolbar, TextField, Button } from '@mui/material';
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { updateFormName } from "../slices/formSlice";
+import { AppBar, Toolbar, TextField, Button } from "@mui/material";
 
 const TopBar = () => {
   const formName = useSelector((state) => state.form.formName);
@@ -16,29 +16,51 @@ const TopBar = () => {
   const saveForm = () => {
     const jsonData = JSON.stringify(formState, null, 2);
     console.log(jsonData);
-    const blob = new Blob([jsonData], { type: 'application/json' });
-    const link = document.createElement('a');
+    const blob = new Blob([jsonData], { type: "application/json" });
+    const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = 'layout.json';
+    link.download = "layout.json";
     link.click();
     // Handle the JSON data as needed
   };
   return (
-    <AppBar position="static" color="default">
-      <Toolbar sx={{display:'flex',justifyContent:'space-between'}}>
+    <AppBar position="static" color="default" sx={{ backgroundColor: "white" }}>
+      <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
         <TextField
-          label="Form Name"
+          placeholder="Form Name"
           variant="outlined"
           value={formName}
-          onChange={handleFormNameChange}
           size="small"
-          sx={{ backgroundColor: 'white' }}
+          onChange={handleFormNameChange}
+          sx={{
+            backgroundColor: "white",
+            "& .MuiOutlinedInput-root": {
+              "& input": {
+                padding: 0,
+              },
+              "& fieldset": {
+                border: "none",
+                borderRadius: 0,
+              },
+              "&:hover fieldset": {
+                borderBottom: "1px solid black",
+              },
+              "&.Mui-focused fieldset": {
+                border: "none", // focused effect
+                borderBottom: "1px solid black",
+              },
+            },
+          }}
         />
-        <Button variant="contained" onClick={saveForm} sx={{ margin: 2 }}>
-        Save Form
-      </Button>
+        <Button
+          variant="contained"
+          className="contained"
+          onClick={saveForm}
+          sx={{ margin: 2 }}
+        >
+          Save Form
+        </Button>
       </Toolbar>
-      
     </AppBar>
   );
 };

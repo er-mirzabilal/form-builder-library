@@ -36,3 +36,12 @@
     transform: rotate(360deg);
   }
 }
+
+.MuiButton-root.contained {
+  background-color: rgb(127, 127, 230);
+  border-radius: 4px;
+}
+
+.box-shadow {
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}

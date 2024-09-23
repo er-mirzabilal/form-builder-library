@@ -1,5 +1,6 @@
 // src/slices/formSlice.js
 import { createSlice } from "@reduxjs/toolkit";
+import { ContentType } from "../utils/constants";
 
 export const getSelectedContent = (state) => state.form.selectedContent;
 export const getSelectedContentType = (state) => state.form.selectedContentType;
@@ -118,10 +119,17 @@ const formSlice = createSlice({
     updateLayoutColumns(state, action) {
       const { pageId, layoutId, columns } = action.payload;
       const page = state.pages.find((p) => p.id === pageId);
+
       if (page) {
         const layout = page.layouts.find((el) => el.id === layoutId);
         if (layout) {
           layout.columns = columns;
+        }
+        if (
+          state.selectedContent.columns &&
+          state.selectedContentType === ContentType.LAYOUT
+        ) {
+          state.selectedContent.columns = columns;
         }
       }
     },
@@ -162,7 +170,7 @@ export const {
   setSelectedContent,
   setPageName,
   setSelectedLayoutId,
-  setPageContent
+  setPageContent,
 } = formSlice.actions;
 
 export default formSlice.reducer;
