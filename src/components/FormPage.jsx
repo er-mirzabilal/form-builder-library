@@ -7,6 +7,7 @@ import {
   ButtonBase,
   Dialog,
   Divider,
+  Grid,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -25,10 +26,14 @@ import { ContentType } from "../utils/constants";
 // import { Draggable } from 'react-drag-reorder';
 import NoContentImage from "../assets/no-content.png";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { ArrowBack } from "@mui/icons-material";
+import QuestionIcon from "../assets/questionIcon.png";
+import TextIcon from "../assets/textIcon.png";
 
 const FormPage = () => {
   const selectedContent = useSelector(getSelectedContent);
   const selectedContentType = useSelector(getSelectedContentType);
+  const [isHoverOnAdd, setIsHoverOnAdd] = useState(false);
   const currentPageId = useSelector((state) => state.form.currentPageId);
   const pages = useSelector((state) => state.form.pages);
   const dispatch = useDispatch();
@@ -47,7 +52,6 @@ const FormPage = () => {
           display: "flex",
           flexDirection: "column",
           gap: 2,
-          borderRadius: 4,
           backgroundColor: "white",
         }}
         className="box-shadow"
@@ -118,8 +122,8 @@ const FormPage = () => {
         padding: 0,
         overflowY: "auto",
         scrollbarWidth: "thin",
-        borderRadius: 4,
         backgroundColor: "white",
+        py: 4
       }}
       className="box-shadow"
     >
@@ -163,60 +167,137 @@ const FormPage = () => {
           border={"#388bff"}
         />
       ))}
-
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          position: "relative",
-          my: 5,
-        }}
-      >
-        <Divider
-          variant="fullWidth"
-          flexItem
+      {openElementSelector ? (
+        <Box
           sx={{
-            borderColor: "rgba(0, 0, 0, 0.12)",
-            width: "50%",
-            height: "1px",
-            my: "auto",
+            height: "400px",
+            my: 4,
+            position: "relative",
+            border: "1px solid #ccc",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            ":hover": {
+              border: "1px solid blue",
+            },
+            mx: 2,
           }}
-        />
-        <Tooltip title={"Add Widget"} placement="top" arrow>
+        >
           <ButtonBase
-            onClick={() => handleElementSelect("question")}
+            onClick={handleCloseElementSelector}
             sx={{
-              margin: "20px auto",
-              width: 50,
-              height: 50,
-              background: "rgb(127, 127, 230)",
+              border: "1px solid gray",
               borderRadius: "100%",
-              color: "white",
               position: "absolute",
-              left: "49%",
+              top: 10,
+              left: 10,
+              width: 32,
+              height: 32,
             }}
           >
-            <AddIcon />
+            <ArrowBack sx={{ width: 20, height: 20 }} />
           </ButtonBase>
-        </Tooltip>
-        <Divider
-          variant="fullWidth"
-          flexItem
-          sx={{
-            borderColor: "rgba(0, 0, 0, 0.12)",
-            width: "50%",
-            height: "1px",
-            my: "auto",
-          }}
-        />
-      </Box>
 
-      <Dialog open={openElementSelector} onClose={handleCloseElementSelector}>
+          <Grid container gap={2} width={"fit-content"}>
+            {[
+              { text: "text", Icon: TextIcon },
+              { text: "question", Icon: QuestionIcon },
+            ].map((item, index) => (
+              <Box key={index} textAlign={"center"}>
+                <ButtonBase
+                  onClick={() => {
+                    handleElementSelect(item.text);
+                    handleCloseElementSelector();
+                  }}
+                  sx={{
+                    border: "2px solid transparent",
+                    width: "80px",
+                    height: "54px",
+                    boxShadow:
+                      "rgba(0, 18, 71, 0.15) 0px 0px 1px 0px, rgba(0, 0, 33, 0.08) 0px 0px 2px 1px",
+                    ":hover": {
+                      border: "2px solid rgb(89, 126, 255)",
+                    },
+                    mb: 0.6,
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <img width={30} height={30} src={item.Icon} alt="images" />
+                </ButtonBase>
+                <Typography
+                  sx={{ fontSize: "14px", textTransform: "capitalize" }}
+                >
+                  {item.text}
+                </Typography>
+              </Box>
+            ))}
+          </Grid>
+        </Box>
+      ) : (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            position: "relative",
+            my: 7,
+          }}
+        >
+          <Divider
+            variant="fullWidth"
+            flexItem
+            sx={{
+              borderColor: isHoverOnAdd ? "rgb(127, 127, 230)": "rgba(0, 0, 0, 0.12)",
+              width: "50%",
+              height: "1px",
+              my: "auto",
+            }}
+          />
+          <Tooltip title={"Add Widget"} placement="top" arrow>
+            <ButtonBase
+              onMouseEnter={() => setIsHoverOnAdd(true)}
+              onMouseLeave={() => setIsHoverOnAdd(false)}
+              // onClick={() => handleElementSelect("question")}
+              onClick={handleAddWidgetClick}
+              sx={{
+                margin: "20px auto",
+                width: 50,
+                height: 50,
+                backgroundColor: "white",
+                borderRadius: "100%",
+                color: "rgb(127, 127, 230)",
+                border: "1px solid rgb(127, 127, 230)",
+                ":hover": {
+                  background: "rgb(127, 127, 230)",
+                  color: "white",
+                },
+                position: "absolute",
+                left: "49%",
+              }}
+            >
+              <AddIcon />
+            </ButtonBase>
+          </Tooltip>
+          <Divider
+            variant="fullWidth"
+            flexItem
+            sx={{
+              borderColor: isHoverOnAdd ? "rgb(127, 127, 230)": "rgba(0, 0, 0, 0.12)",
+              width: "50%",
+              height: "1px",
+              my: "auto",
+            }}
+          />
+        </Box>
+      )}
+
+      {/* <Dialog open={openElementSelector} onClose={handleCloseElementSelector}>
         <ElementSelector
           pageId={currentPageId}
           onClose={handleCloseElementSelector}
         />
-      </Dialog>
+      </Dialog> */}
     </Box>
   );
 };

@@ -1,13 +1,11 @@
 // src/components/ElementWrapper.jsx
-import React, { useMemo } from "react";
-import { Box, Grid, Typography } from "@mui/material";
+import React, { useMemo, useState } from "react";
+import { Box, ButtonBase, Grid, Tooltip } from "@mui/material";
 import QuestionElement from "./QuestionElement";
-import LayoutSelector from "./LayoutSelector";
 import EmailElement from "./EmailElement";
 import TextFieldElement from "./TextFieldElement";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  getCurrentPageId,
   getSelectedContent,
   setSelectedContent,
   setSelectedContentType,
@@ -20,6 +18,10 @@ const ElementWrapper = ({ layout, index, border }) => {
   const columns = layout.columns;
   const dispatch = useDispatch();
   const selectedContent = useSelector(getSelectedContent);
+  const [isHoverContainer, setIsHoverContainer] = useState(false);
+  const [isHoverIconTopContainer, setIsHoverIconTopContainer] = useState(false);
+  const [isHoverIconBottomContainer, setIsHoverIconBottomContainer] =
+    useState(false);
   // const remainingColumns = 3-columns;
   console.log(layout, "layout", "ss");
   const handleLayoutClick = () => {
@@ -44,8 +46,8 @@ const ElementWrapper = ({ layout, index, border }) => {
               justifyContent: "center",
               alignItems: "center",
               gap: "10px",
-              borderRadius: "4px",
               "&:hover": { border: `1px solid blue` },
+              width: "100%",
             }}
           >
             <Add />
@@ -60,21 +62,54 @@ const ElementWrapper = ({ layout, index, border }) => {
     <Box
       key={index}
       onClick={handleLayoutClick}
+      onMouseEnter={() => setIsHoverContainer(true)}
+      onMouseLeave={() => setIsHoverContainer(false)}
       sx={{
         mt: index > 0 ? 2 : 0,
         padding: 2,
         background: background,
         border:
           selectedContent?.id === layout?.id
-            ? `2px solid ${border}`
-            : "2px solid transparent",
+            ? `1px solid ${border}`
+            : "1px solid transparent",
         display: "flex",
+
         flexDirection: "column",
         gap: "10px",
-        "&:hover": { border: `2px solid ${border}` },
-        borderRadius: 4,
+        "&:hover": {
+          border: `1px solid ${border}`,
+          borderTop: isHoverIconTopContainer ? `3px solid ${border}` : "",
+          borderBottom: isHoverIconBottomContainer ? `3px solid ${border}` : "",
+        },
+        position: "relative",
       }}
     >
+      {isHoverContainer && (
+        <Tooltip title="Add a block" arrow placement="top">
+          <ButtonBase
+            onMouseEnter={() => setIsHoverIconTopContainer(true)}
+            onMouseLeave={() => setIsHoverIconTopContainer(false)}
+            sx={{
+              position: "absolute",
+              width: "40px",
+              height: "40px",
+              borderRadius: "100%",
+              backgroundColor: border,
+              transform: "scale(0.5)",
+              transition: "0.5s ease",
+              color: "white",
+              ":hover": {
+                transform: "scale(1)",
+              },
+              left: "49.3%",
+              top: -20,
+            }}
+          >
+            <Add />
+          </ButtonBase>
+        </Tooltip>
+      )}
+
       <Grid container gap={1}>
         {layout.elements?.map((element) => (
           <Grid item xs={11.9 / columns}>
@@ -104,6 +139,31 @@ const ElementWrapper = ({ layout, index, border }) => {
         ))}
         {elements}
       </Grid>
+      {isHoverContainer && (
+        <Tooltip title="Add a block" arrow placement="bottom">
+          <ButtonBase
+            onMouseEnter={() => setIsHoverIconBottomContainer(true)}
+            onMouseLeave={() => setIsHoverIconBottomContainer(false)}
+            sx={{
+              position: "absolute",
+              width: "40px",
+              height: "40px",
+              borderRadius: "100%",
+              backgroundColor: border,
+              transform: "scale(0.5)",
+              transition: "0.5s ease",
+              color: "white",
+              ":hover": {
+                transform: "scale(1)",
+              },
+              left: "49.3%",
+              bottom: -20,
+            }}
+          >
+            <Add />
+          </ButtonBase>
+        </Tooltip>
+      )}
     </Box>
   );
 };
