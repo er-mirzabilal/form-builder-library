@@ -1,17 +1,21 @@
 // src/components/ElementWrapper.jsx
 import React, { useMemo, useState } from "react";
-import { Box, ButtonBase, Grid, Tooltip } from "@mui/material";
+import { Box, ButtonBase, Grid, Popover, Tooltip } from "@mui/material";
 import QuestionElement from "./QuestionElement";
 import EmailElement from "./EmailElement";
 import TextFieldElement from "./TextFieldElement";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  addElement,
+  addLayout,
+  getCurrentPageId,
   getSelectedContent,
   setSelectedContent,
   setSelectedContentType,
 } from "../slices/formSlice";
 import { ContentType } from "../utils/constants";
 import { Add } from "@mui/icons-material";
+import ElementSelectorOptions from "./ElementSelectorOptions";
 
 const ElementWrapper = ({ layout, index, border }) => {
   const background = layout.backgroundColor;
@@ -22,20 +26,57 @@ const ElementWrapper = ({ layout, index, border }) => {
   const [isHoverIconTopContainer, setIsHoverIconTopContainer] = useState(false);
   const [isHoverIconBottomContainer, setIsHoverIconBottomContainer] =
     useState(false);
+  const currentPageId = useSelector(getCurrentPageId);
   // const remainingColumns = 3-columns;
+  const [addLayoutPosition, setAddLayoutPosition] = useState('');
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
+  const [anchorEl2, setAnchorEl2] = React.useState(null);
+  const handleClose2 = () => {
+    setAnchorEl2(null);
+  };
+  const open2 = Boolean(anchorEl2);
+  const id2 = open2 ? 'simple-popover-2' : undefined;
   console.log(layout, "layout", "ss");
   const handleLayoutClick = () => {
     dispatch(setSelectedContent(layout));
     dispatch(setSelectedContentType(ContentType.LAYOUT));
   };
 
+  const handleAddLayout = (event, type) => {
+    setAnchorEl(event.currentTarget);
+    setAddLayoutPosition(type);
+    console.log(type, ' click');
+  }
+
+  const handleElementSelectFromPopover = (element) => {
+    console.log('element', element);
+    dispatch(addLayout({ pageId: currentPageId, element, index, position: addLayoutPosition }));
+    handleClose();
+  }
+
+  const handleAddElement = (element) => {
+    dispatch(addElement({pageId:currentPageId, layoutId:layout?.id, element}))
+    handleClose2();
+  }
+
+  // const handleAddLayoutBelow = (event) => {
+  //   setAnchorEl(event.currentTarget);
+  //   console.log('below click');
+  // }
+
   const elements = useMemo(() => {
     let array = [];
     if (layout.elements?.length < columns) {
-      console.log("inside", layout.element < columns);
+      console.log("inside", layout.elements?.length < columns);
       for (let i = 0; i < (layout.elements?.length < columns); i++) {
         array.push(
           <Grid
+            onClick={(event)=>{event.stopPropagation();setAnchorEl2(event.currentTarget)}}
             item
             xs={3}
             sx={{
@@ -48,6 +89,7 @@ const ElementWrapper = ({ layout, index, border }) => {
               gap: "10px",
               "&:hover": { border: `1px solid blue` },
               width: "100%",
+              cursor:"pointer"
             }}
           >
             <Add />
@@ -56,8 +98,8 @@ const ElementWrapper = ({ layout, index, border }) => {
       }
     }
     return array;
-  }, [columns]);
-
+  }, [columns,layout.elements]);
+  console.log(elements,'eleddd')
   return (
     <Box
       key={index}
@@ -87,6 +129,7 @@ const ElementWrapper = ({ layout, index, border }) => {
       {isHoverContainer && (
         <Tooltip title="Add a block" arrow placement="top">
           <ButtonBase
+            onClick={(event) => handleAddLayout(event, 'top')}
             onMouseEnter={() => setIsHoverIconTopContainer(true)}
             onMouseLeave={() => setIsHoverIconTopContainer(false)}
             sx={{
@@ -142,6 +185,7 @@ const ElementWrapper = ({ layout, index, border }) => {
       {isHoverContainer && (
         <Tooltip title="Add a block" arrow placement="bottom">
           <ButtonBase
+            onClick={(event) => handleAddLayout(event, 'bottom')}
             onMouseEnter={() => setIsHoverIconBottomContainer(true)}
             onMouseLeave={() => setIsHoverIconBottomContainer(false)}
             sx={{
@@ -164,6 +208,30 @@ const ElementWrapper = ({ layout, index, border }) => {
           </ButtonBase>
         </Tooltip>
       )}
+      <Popover
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+      >
+        <ElementSelectorOptions handleElementSelect={handleElementSelectFromPopover} />
+      </Popover>
+      <Popover
+        id={id2}
+        open={open2}
+        anchorEl={anchorEl2}
+        onClose={handleClose2}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+      >
+        <ElementSelectorOptions handleElementSelect={handleAddElement} />
+      </Popover>
     </Box>
   );
 };

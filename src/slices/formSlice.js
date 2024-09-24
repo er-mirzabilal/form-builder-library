@@ -84,17 +84,78 @@ const formSlice = createSlice({
       }
     },
     addElement(state, action) {
-      const { pageId, element } = action.payload;
-      const page = state.pages.find((p) => p.id === pageId);
-      if (page) {
-        page.layouts.push({
-          id: Date.now().toString() + "-layout",
-          // name: `Layout 1`,
-          columns: 1,
-          backgroundColor: "white",
-          elements: [element],
-        });
-      }
+      const { pageId, layoutId, element } = action.payload;
+      return {
+        ...state,
+        pages: state.pages.map((page) => {
+          // Find the page with the matching pageId
+          if (page.id === pageId) {
+            return {
+              ...page,
+              layouts: page.layouts.map((layout) => {
+                // Find the layout with the matching layoutId
+                if (layout.id === layoutId) {
+                  return {
+                    ...layout,
+                    elements: [...layout.elements, element], // Add the new element to the elements array
+                  };
+                }
+                return layout; // Return other layouts unchanged
+              }),
+            };
+          }
+
+          return page; // Return other pages unchanged
+        }),
+      };
+    },
+    addLayout(state, action) {
+      const { pageId, element, index, position } = action.payload;
+
+      return {
+        ...state,
+        pages: state.pages.map((page) => {
+          if (page.id === pageId) {
+            const updatedLayouts = [...page.layouts]; // Create a copy of the layouts array
+
+            if (position && index >= 0) {
+              // Insert at a specific index based on position
+              if (position === "top") {
+                updatedLayouts.splice(index, 0, {
+                  id: Date.now().toString() + "-layout",
+                  columns: 1,
+                  backgroundColor: "white",
+                  elements: [element],
+                });
+              } else if (position === "bottom") {
+                updatedLayouts.splice(index + 1, 0, {
+                  id: Date.now().toString() + "-layout",
+                  columns: 1,
+                  backgroundColor: "white",
+                  elements: [element],
+                });
+              }
+            } else {
+              // Append the new layout when no index/position is provided
+              updatedLayouts.push({
+                id: Date.now().toString() + "-layout",
+                columns: 1,
+                backgroundColor: "white",
+                elements: [element],
+              });
+            }
+
+            // Return the updated page with modified layouts
+            return {
+              ...page,
+              layouts: updatedLayouts,
+            };
+          }
+
+          // Return the unchanged page if id doesn't match
+          return page;
+        }),
+      };
     },
     updateElementProperties(state, action) {
       const { pageId, elementId, properties } = action.payload;
@@ -162,6 +223,7 @@ export const {
   updateFormName,
   addPage,
   setCurrentPage,
+  addLayout,
   addElement,
   updateElementProperties,
   updateLayoutColumns,

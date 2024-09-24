@@ -1,7 +1,7 @@
 // src/components/ElementSelector.jsx
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addElement, getCurrentPageId } from '../slices/formSlice';
+import { addLayout, getCurrentPageId } from '../slices/formSlice';
 import { Button, Box } from '@mui/material';
 
 const ElementSelector = ({ onClose }) => {
@@ -20,7 +20,7 @@ const ElementSelector = ({ onClose }) => {
       },
     };
 
-    dispatch(addElement({ pageId: currentPageId, element: newElement }));
+    dispatch(addLayout({ pageId: currentPageId, element: newElement }));
     onClose();
   };
 
