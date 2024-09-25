@@ -1,7 +1,5 @@
 import {
   ListItem,
-  ListItemButton,
-  ListItemText,
   TextField,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,12 +8,15 @@ import Pageicon from "../assets/Vector.png";
 import { useState } from "react";
 
 const PageItem = ({ page }) => {
+  const dispatch = useDispatch();
   const [pageName, setPageNameLocal] = useState(page?.name);
   const currentPageId = useSelector((state) => state.form.currentPageId);
-  const dispatch = useDispatch();
+ 
+
   const handlePageSelect = (pageId) => {
     dispatch(setCurrentPage(pageId));
   };
+  
   const handleChange = (event) => {
     setPageNameLocal(event.target.value);
     dispatch(setPageName({ pageId: currentPageId, name: event.target.value }));
@@ -48,7 +49,7 @@ const PageItem = ({ page }) => {
         onChange={handleChange}
         size="medium"
         sx={{
-          backgroundColor: "white",
+
           "& .MuiOutlinedInput-root": {
             "& input": {
               padding: 0,

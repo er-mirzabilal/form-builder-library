@@ -21,6 +21,7 @@ import {
 } from "@mui/material";
 import { ContentType } from "../utils/constants";
 import { Add, DeleteOutlined, MoreVert } from "@mui/icons-material";
+import { setSideDrawerOpen } from "../slices/otherStates";
 
 const QuestionElement = ({ element, layoutId }) => {
   const dispatch = useDispatch();
@@ -36,7 +37,9 @@ const QuestionElement = ({ element, layoutId }) => {
     dispatch(setSelectedContent(element));
     dispatch(setSelectedContentType(ContentType.ELEMENT));
     dispatch(setSelectedLayoutId(layoutId));
+    dispatch(setSideDrawerOpen(true));
   };
+
   const handleQuestionTextChange = (e) => {
     dispatch(
       updateElementProperties({
@@ -53,13 +56,11 @@ const QuestionElement = ({ element, layoutId }) => {
       onMouseEnter={() => setIsHoverContainer(true)}
       onMouseLeave={() => setIsHoverContainer(false)}
       sx={{
-        marginBottom: 2,
         padding: "15px",
-        opacity: selectedContent?.id === element?.id ? 1 : 0.5,
         border:
           selectedContent?.id === element?.id
             ? "1px solid blue"
-            : "1px solid transparent",
+            : "1px solid rgba(0, 0, 0, 0.1)",
         display: "flex",
         flexDirection: "column",
         gap: "10px",
@@ -71,7 +72,7 @@ const QuestionElement = ({ element, layoutId }) => {
         },
       }}
     >
-      {isHoverContainer && selectedContent?.id === element?.id && (
+      {/* {isHoverContainer && selectedContent?.id === element?.id && (
         <Box
           sx={{
             position: "absolute",
@@ -93,21 +94,10 @@ const QuestionElement = ({ element, layoutId }) => {
           >
             <DeleteOutlined sx={{ width: "15px", height: "15px" }} />{" "}
           </ButtonBase>
-          <ButtonBase
-            sx={{
-              width: "20px",
-              height: "20px",
-              backgroundColor: "white",
-              boxShadow:
-                "rgba(0, 18, 71, 0.1) 0px 6px 16px 0px, rgba(0, 0, 33, 0.05) 0px 0px 2px 1px",
-            }}
-          >
-            {" "}
-            <MoreVert sx={{ width: "15px", height: "15px" }} />
-          </ButtonBase>
         </Box>
-      )}
-      {isHoverContainer && (
+      )} */}
+      
+      {/* {isHoverContainer && (
         <ButtonBase
           onMouseEnter={() => setIsHoverIconTopContainer(true)}
           onMouseLeave={() => setIsHoverIconTopContainer(false)}
@@ -132,7 +122,7 @@ const QuestionElement = ({ element, layoutId }) => {
         >
           <Add />
         </ButtonBase>
-      )}
+      )} */}
       {/* <Typography sx={{}}>{element.properties.label}</Typography> */}
       {element.properties.type === "short-text" ? (
         <Box>
@@ -162,8 +152,7 @@ const QuestionElement = ({ element, layoutId }) => {
             onChange={handleQuestionTextChange}
           />
           <TextField
-            // label="Question Text"
-
+            // label="Question Text"  
             sx={{
               backgroundColor: "white",
               mt: 2,
@@ -202,8 +191,7 @@ const QuestionElement = ({ element, layoutId }) => {
             id="w3review"
             name="w3review"
             rows="4"
-            cols="50"
-            style={{ padding: 10, marginTop: 20 }}
+            style={{ padding: 10, marginTop: 20, width: "97%" }}
             onChange={handleQuestionTextChange}
           >
             {element.properties.placeholder}
@@ -244,7 +232,7 @@ const QuestionElement = ({ element, layoutId }) => {
       {element.properties.isRequired && (
         <Typography>* This question is required.</Typography>
       )}
-      {isHoverContainer && (
+      {/* {isHoverContainer && (
         <ButtonBase
           onMouseEnter={() => setIsHoverIconBottomContainer(true)}
           onMouseLeave={() => setIsHoverIconBottomContainer(false)}
@@ -270,7 +258,7 @@ const QuestionElement = ({ element, layoutId }) => {
         >
           <Add />
         </ButtonBase>
-      )}
+      )} */}
     </Box>
   );
 };

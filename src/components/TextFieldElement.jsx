@@ -10,6 +10,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { ContentType } from "../utils/constants";
 import { Add, DeleteOutlined, MoreVert } from "@mui/icons-material";
+import { setSideDrawerOpen } from "../slices/otherStates";
 
 const TextFieldElement = ({ element, layoutId }) => {
   const dispatch = useDispatch();
@@ -24,6 +25,7 @@ const TextFieldElement = ({ element, layoutId }) => {
     dispatch(setSelectedContent(element));
     dispatch(setSelectedContentType(ContentType.ELEMENT));
     dispatch(setSelectedLayoutId(layoutId));
+    dispatch(setSideDrawerOpen(true));
   };
 
   return (
@@ -32,16 +34,14 @@ const TextFieldElement = ({ element, layoutId }) => {
       onMouseEnter={() => setIsHoverContainer(true)}
       onMouseLeave={() => setIsHoverContainer(false)}
       sx={{
-        marginBottom: 2,
         padding: "15px",
         border:
           selectedContent?.id === element?.id
             ? "1px solid blue"
-            : "1px solid transparent",
+            : "1px solid rgba(0, 0, 0, 0.1)",
         display: "flex",
         flexDirection: "column",
         gap: "10px",
-        opacity: selectedContent?.id === element?.id ? 1 : 0.5,
         position: "relative",
         "&:hover": {
           border: "1px solid blue",
@@ -50,7 +50,7 @@ const TextFieldElement = ({ element, layoutId }) => {
         },
       }}
     >
-      {isHoverContainer && selectedContent?.id === element?.id  && (
+      {/* {isHoverContainer && selectedContent?.id === element?.id  && (
         <Box
           sx={{
             position: "absolute",
@@ -72,21 +72,10 @@ const TextFieldElement = ({ element, layoutId }) => {
           >
             <DeleteOutlined sx={{ width: "15px", height: "15px" }} />{" "}
           </ButtonBase>
-          <ButtonBase
-            sx={{
-              width: "20px",
-              height: "20px",
-              backgroundColor: "white",
-              boxShadow:
-                "rgba(0, 18, 71, 0.1) 0px 6px 16px 0px, rgba(0, 0, 33, 0.05) 0px 0px 2px 1px",
-            }}
-          >
-            {" "}
-            <MoreVert sx={{ width: "15px", height: "15px" }} />
-          </ButtonBase>
         </Box>
-      )}
-      {isHoverContainer && (
+      )} */}
+
+      {/* {isHoverContainer && (
         <ButtonBase
           onMouseEnter={() => setIsHoverIconTopContainer(true)}
           onMouseLeave={() => setIsHoverIconTopContainer(false)}
@@ -111,7 +100,8 @@ const TextFieldElement = ({ element, layoutId }) => {
         >
           <Add />
         </ButtonBase>
-      )}
+      )} */}
+
       <Typography sx={{}}>{element.properties.label}</Typography>
       <TextField
         placeholder={element.properties.placeholder || "Enter your text"}
@@ -139,7 +129,7 @@ const TextFieldElement = ({ element, layoutId }) => {
       {element.properties.isRequired && (
         <Typography>* This question is required.</Typography>
       )}
-      {isHoverContainer && (
+      {/* {isHoverContainer && (
         <ButtonBase
           onMouseEnter={() => setIsHoverIconBottomContainer(true)}
           onMouseLeave={() => setIsHoverIconBottomContainer(false)}
@@ -165,7 +155,7 @@ const TextFieldElement = ({ element, layoutId }) => {
         >
           <Add />
         </ButtonBase>
-      )}
+      )} */}
     </Box>
   );
 };
