@@ -9,20 +9,23 @@ import {
 } from "../slices/formSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { ContentType } from "../utils/constants";
-import { Add } from "@mui/icons-material";
+import { Add, DeleteOutlined, MoreVert } from "@mui/icons-material";
 const EmailElement = ({ element, layoutId }) => {
   const dispatch = useDispatch();
   const selectedContent = useSelector(getSelectedContent);
+
   const [isHoverContainer, setIsHoverContainer] = useState(false);
   const [isHoverIconTopContainer, setIsHoverIconTopContainer] = useState(false);
   const [isHoverIconBottomContainer, setIsHoverIconBottomContainer] =
     useState(false);
+
   const handleElementClick = (event) => {
     event.stopPropagation();
     dispatch(setSelectedContent(element));
     dispatch(setSelectedContentType(ContentType.ELEMENT));
     dispatch(setSelectedLayoutId(layoutId));
   };
+
   return (
     <Box
       onClick={(event) => handleElementClick(event)}
@@ -47,6 +50,42 @@ const EmailElement = ({ element, layoutId }) => {
         position: "relative",
       }}
     >
+      {isHoverContainer && selectedContent?.id === element?.id && (
+        <Box
+          sx={{
+            position: "absolute",
+            right: 5,
+            top: -28,
+            display: "flex",
+            gap: 1,
+            pb: 2,
+          }}
+        >
+          <ButtonBase
+            sx={{
+              width: "20px",
+              height: "20px",
+              backgroundColor: "white",
+              boxShadow:
+                "rgba(0, 18, 71, 0.1) 0px 6px 16px 0px, rgba(0, 0, 33, 0.05) 0px 0px 2px 1px",
+            }}
+          >
+            <DeleteOutlined sx={{ width: "15px", height: "15px" }} />{" "}
+          </ButtonBase>
+          <ButtonBase
+            sx={{
+              width: "20px",
+              height: "20px",
+              backgroundColor: "white",
+              boxShadow:
+                "rgba(0, 18, 71, 0.1) 0px 6px 16px 0px, rgba(0, 0, 33, 0.05) 0px 0px 2px 1px",
+            }}
+          >
+            {" "}
+            <MoreVert sx={{ width: "15px", height: "15px" }} />
+          </ButtonBase>
+        </Box>
+      )}
       {isHoverContainer && (
         <ButtonBase
           onMouseEnter={() => setIsHoverIconTopContainer(true)}
