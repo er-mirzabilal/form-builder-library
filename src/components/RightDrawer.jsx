@@ -95,12 +95,12 @@ const RightDrawer = () => {
       }}
       className="box-shadow"
     >
-      <Box sx={{ display: "flex", gap: 4, alignItems: "center" }}>
+      <Box sx={{ display: "flex", gap: 2, alignItems: "center", p: 1}}>
         <IconButton
           onClick={() => dispatch(setSideDrawerOpen(false))}
-          sx={{ borderRadius: "100%" }}
+          sx={{ borderRadius: "100%", border: "1px solid", p: 0.5 }}
         >
-          <ArrowBack />
+          <ArrowBack sx={{width: "20px", height: "20px"}} />
         </IconButton>
         <Typography>Content Detail</Typography>
       </Box>
