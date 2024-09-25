@@ -40,15 +40,25 @@ const QuestionElement = ({ element, layoutId }) => {
     dispatch(setSideDrawerOpen(true));
   };
 
-  const handleQuestionTextChange = (e) => {
+  const handleQuestionLabelChange = (e) => {
     dispatch(
       updateElementProperties({
-        currentPageId,
+        pageId:currentPageId,
         elementId: element.id,
-        properties: { questionText: e.target.value },
+        properties: { label: e.target.value },
       })
     );
   };
+
+  const handleQuestionPlaceholderChange = (e) => {
+    dispatch(
+      updateElementProperties({
+        pageId:currentPageId,
+        elementId: element.id,
+        properties: { placeholder: e.target.value },
+      })
+    );
+  }
 
   return (
     <Box
@@ -149,7 +159,7 @@ const QuestionElement = ({ element, layoutId }) => {
             }}
             fullWidth
             value={element.properties.label}
-            onChange={handleQuestionTextChange}
+            onChange={handleQuestionLabelChange}
           />
           <TextField
             // label="Question Text"  
@@ -174,7 +184,7 @@ const QuestionElement = ({ element, layoutId }) => {
             }}
             fullWidth
             value={element.properties.placeholder}
-            onChange={handleQuestionTextChange}
+            onChange={handleQuestionPlaceholderChange}
           />
         </Box>
       ) : element.properties.type === "long-text" ? (
@@ -185,14 +195,14 @@ const QuestionElement = ({ element, layoutId }) => {
             variant="filled"
             fullWidth
             value={element.properties.label}
-            onChange={handleQuestionTextChange}
+            onChange={handleQuestionLabelChange}
           />
           <textarea
             id="w3review"
             name="w3review"
             rows="4"
             style={{ padding: 10, marginTop: 20, width: "97%" }}
-            onChange={handleQuestionTextChange}
+            onChange={handleQuestionPlaceholderChange}
           >
             {element.properties.placeholder}
           </textarea>
@@ -205,7 +215,7 @@ const QuestionElement = ({ element, layoutId }) => {
             variant="filled"
             fullWidth
             value={element.properties.label}
-            onChange={handleQuestionTextChange}
+            onChange={handleQuestionLabelChange}
           />
           <FormControl>
             {/* <FormLabel id="demo-radio-buttons-group-label">Gender</FormLabel> */}
