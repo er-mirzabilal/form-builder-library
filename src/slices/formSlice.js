@@ -216,6 +216,10 @@ const formSlice = createSlice({
       const payload = action.payload;
       state.selectedLayoutId = payload;
     },
+    updateSelectedContentBackground(state, action) {
+      const payload = action.payload;
+      state.selectedContent.backgroundColor = payload;
+    },
   },
 });
 
@@ -233,6 +237,7 @@ export const {
   setPageName,
   setSelectedLayoutId,
   setPageContent,
+  updateSelectedContentBackground,
 } = formSlice.actions;
 
 export default formSlice.reducer;

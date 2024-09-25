@@ -1,5 +1,5 @@
 // RightSidebar.jsx
-import React from "react";
+import React, { useState } from "react";
 import {
   ButtonGroup,
   Button,
@@ -10,6 +10,7 @@ import {
   ButtonBase,
   Grid,
   IconButton,
+  Popover,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -20,6 +21,7 @@ import {
   getCurrentPageId,
   getSelectedContent,
   getSelectedContentType,
+  updateSelectedContentBackground,
 } from "../slices/formSlice";
 import { ContentType } from "../utils/constants";
 import { backgroundColors } from "../utils/data";
@@ -28,6 +30,7 @@ import LargeTextImage from "../assets/image-largeText.png";
 import SelectBoxImage from "../assets/image-selectBox.png";
 import { ArrowBack } from "@mui/icons-material";
 import { setSideDrawerOpen } from "../slices/otherStates";
+import { HexColorPicker } from "react-colorful";
 
 const RightDrawer = () => {
   const pages = useSelector(getPages);
@@ -35,6 +38,12 @@ const RightDrawer = () => {
   const selectedContentType = useSelector(getSelectedContentType);
   const currentPageId = useSelector(getCurrentPageId);
   const dispatch = useDispatch();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
 
   const handleLayoutColumnChange = (columns) => {
     dispatch(
@@ -53,6 +62,7 @@ const RightDrawer = () => {
         color,
       })
     );
+    dispatch(updateSelectedContentBackground(color));
   };
 
   const handleElementTypeChange = (val) => {
@@ -177,23 +187,45 @@ const RightDrawer = () => {
               </Button>
             </ButtonGroup>
           </Box>
-          <Box>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
             <Typography>Background Color</Typography>
-            <Grid container gap={1} mt={1}>
-              {backgroundColors.map((item, index) => (
-                <ButtonBase
-                  key={index}
-                  onClick={() => handleLayoutBackgroundChange(item)}
-                  sx={{
-                    width: "30px",
-                    height: "30px",
-                    background: item,
-                    borderRadius: "100%",
-                    border: "2px solid",
+            <Box sx={{ border: "2px solid", borderRadius: "100%", p: "1px" }}>
+              <ButtonBase
+                onClick={(event) => setAnchorEl(event.currentTarget)}
+                sx={{
+                  width: "22px",
+                  height: "22px",
+                  background: selectedContent?.backgroundColor,
+                  borderRadius: "100%",
+                }}
+              ></ButtonBase>
+            </Box>
+
+            <Popover
+              id={id}
+              open={open}
+              anchorEl={anchorEl}
+              onClose={handleClose}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "center",
+              }}
+            >
+              <Box sx={{ backgroundColor: "white", padding: 2 }}>
+                <HexColorPicker
+                  color={selectedContent?.backgroundColor}
+                  onChange={(value) => {
+                    handleLayoutBackgroundChange(value);
                   }}
-                ></ButtonBase>
-              ))}
-            </Grid>
+                />
+              </Box>
+            </Popover>
           </Box>
         </Box>
       )}
