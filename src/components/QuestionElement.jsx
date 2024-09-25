@@ -43,7 +43,7 @@ const QuestionElement = ({ element, layoutId }) => {
   const handleQuestionLabelChange = (e) => {
     dispatch(
       updateElementProperties({
-        pageId:currentPageId,
+        pageId: currentPageId,
         elementId: element.id,
         properties: { label: e.target.value },
       })
@@ -53,12 +53,12 @@ const QuestionElement = ({ element, layoutId }) => {
   const handleQuestionPlaceholderChange = (e) => {
     dispatch(
       updateElementProperties({
-        pageId:currentPageId,
+        pageId: currentPageId,
         elementId: element.id,
         properties: { placeholder: e.target.value },
       })
     );
-  }
+  };
 
   return (
     <Box
@@ -106,7 +106,7 @@ const QuestionElement = ({ element, layoutId }) => {
           </ButtonBase>
         </Box>
       )} */}
-      
+
       {/* {isHoverContainer && (
         <ButtonBase
           onMouseEnter={() => setIsHoverIconTopContainer(true)}
@@ -158,11 +158,12 @@ const QuestionElement = ({ element, layoutId }) => {
               },
             }}
             fullWidth
+            placeholder={"Type your question here"}
             value={element.properties.label}
             onChange={handleQuestionLabelChange}
           />
           <TextField
-            // label="Question Text"  
+            // label="Question Text"
             sx={{
               backgroundColor: "white",
               mt: 2,
@@ -172,6 +173,7 @@ const QuestionElement = ({ element, layoutId }) => {
                 },
                 "& fieldset": {
                   border: "none",
+                  borderRadius: 0,
                 },
                 "&:hover fieldset": {
                   borderBottom: "1px solid black",
@@ -183,6 +185,7 @@ const QuestionElement = ({ element, layoutId }) => {
               },
             }}
             fullWidth
+            placeholder={"Type your placeholder here"}
             value={element.properties.placeholder}
             onChange={handleQuestionPlaceholderChange}
           />
@@ -191,7 +194,7 @@ const QuestionElement = ({ element, layoutId }) => {
         <Box>
           <TextField
             sx={{ background: "none !important" }}
-            // label="Label Text"
+            placeholder="Type your label here"
             variant="filled"
             fullWidth
             value={element.properties.label}
@@ -200,6 +203,7 @@ const QuestionElement = ({ element, layoutId }) => {
           <textarea
             id="w3review"
             name="w3review"
+            placeholder="Type your placeholder here"
             rows="4"
             style={{ padding: 10, marginTop: 20, width: "97%" }}
             onChange={handleQuestionPlaceholderChange}
@@ -211,7 +215,7 @@ const QuestionElement = ({ element, layoutId }) => {
         <Box>
           <TextField
             sx={{ background: "none !important" }}
-            // label="Label Text"
+             placeholder="Type your label here"
             variant="filled"
             fullWidth
             value={element.properties.label}
