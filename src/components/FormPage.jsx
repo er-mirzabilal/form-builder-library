@@ -143,7 +143,8 @@ const FormPage = () => {
                   </div>
                 )}
               </Draggable>
-            ))}
+            ))} // borderTop: isHoverIconTopContainer ? `2px solid blue` : "",
+                    // borderBottom: isHoverIconBottomContainer ? `2px solid blue` : "",
             {provided.placeholder}
           </div>
         )}

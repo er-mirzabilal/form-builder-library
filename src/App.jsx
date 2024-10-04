@@ -1,12 +1,13 @@
 // src/App.jsx
 import React from "react";
-import { Box, Button } from "@mui/material";
-import { useSelector } from "react-redux";
+import { Box } from "@mui/material";
+// import { useSelector } from "react-redux";
 import TopBar from "./components/TopBar";
-import ToolBar from "./components/ToolBar";
-import FormPage from "./components/FormPage";
+// import ToolBar from "./components/ToolBar";
+// import FormPage from "./components/FormPage";
 import "./App.css";
-import RightSidebar from "./components/RightSidebar";
+import RightSidebar from "./components/FormBuilder/Template/RightSidebar";
+import FormBuilder from "./components/FormBuilder";
 
 const App = () => {
   return (
@@ -21,7 +22,7 @@ const App = () => {
         }}
       >
         {/* <ToolBar /> */}
-        <FormPage />
+        <FormBuilder data={null} />
         <RightSidebar />
       </Box>
     </Box>
