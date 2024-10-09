@@ -1,23 +1,39 @@
-import { Box, ButtonBase, Divider, Grid2, Tooltip } from "@mui/material";
+import {
+  Box,
+  ButtonBase,
+  Divider,
+  Grid,
+  Grid2,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import WidgetsTemplate from "../WidgetsTemplate";
 import { Add } from "@mui/icons-material";
 import AddWidgetModal from "./addWidgetModal";
 import { useState } from "react";
 
-const WidgetWrapper = ({ pageData }) => {
-    const [addWidgetModal, setAddWidgetModal] = useState(false)
-    const handleAddWidgetClick = () => {
-        setAddWidgetModal(true)
-    }
-    Object.keys(pageData.widgets).map(([key, widget]) => {
-
-    })
-    return <Box sx={{ padding: 2, borderRadius: 3 }}>
-        <Grid2 container>
-            {Object.entries(pageData.widgets).map(([key, widget]) => (
-                <WidgetsTemplate key={key} data={widget} />
-            ))}
-            <Box
+const WidgetWrapper = ({ pageData, handleOpenDrawer }) => {
+  const [addWidgetModal, setAddWidgetModal] = useState(false);
+  const handleAddWidgetClick = () => {
+    setAddWidgetModal(true);
+  };
+  Object.keys(pageData.widgets).map(([key, widget]) => {});
+  console.log(pageData.widgets, "pageData.widgets");
+  return (
+    <Box sx={{ padding: 2, borderRadius: 3, px: 10 }}>
+      {Object.entries(pageData.widgets).length ? (
+        <Grid container sx={{ background: "red", p: 1, gap: 1 }}>
+          {Object.entries(pageData.widgets).map(([key, widget]) => (
+            <Grid
+              item
+              xs={12}
+              sx={{ background: "yellow" }}
+              onClick={handleOpenDrawer}
+            >
+              <WidgetsTemplate key={key} data={widget} />
+            </Grid>
+          ))}
+          {/* <Box
                 sx={{
                     display: "flex",
                     alignItems: "center",
@@ -71,11 +87,27 @@ const WidgetWrapper = ({ pageData }) => {
                         my: "auto",
                     }}
                 />
-            </Box>
-
-        </Grid2>
-        <AddWidgetModal open={addWidgetModal} handleClose={() => setAddWidgetModal(false)} />
+            </Box> */}
+        </Grid>
+      ) : (
+        <Typography
+          sx={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100%",
+          }}
+        >
+          No Data Found
+        </Typography>
+      )}
+      <AddWidgetModal
+        open={addWidgetModal}
+        handleClose={() => setAddWidgetModal(false)}
+      />
     </Box>
-}
+  );
+};
 
 export default WidgetWrapper;

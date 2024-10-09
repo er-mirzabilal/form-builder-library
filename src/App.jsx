@@ -8,6 +8,7 @@ import TopBar from "./components/TopBar";
 import "./App.css";
 import RightSidebar from "./components/FormBuilder/Template/RightSidebar";
 import FormBuilder from "./components/FormBuilder";
+import LeftSideBar from "./components/FormBuilder/Template/LeftSidebar";
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
         }}
       >
         {/* <ToolBar /> */}
+        <LeftSideBar />
         <FormBuilder data={null} />
         <RightSidebar />
       </Box>

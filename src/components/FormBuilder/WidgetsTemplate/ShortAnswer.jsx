@@ -30,6 +30,7 @@ const ShortAnswer = ({ data }) => {
                 flexDirection: "column",
                 gap: "10px",
                 position: "relative",
+                border: "1px solid transparent",
                 "&:hover": {
                     border: "1px solid blue",
                     // borderTop: isHoverIconTopContainer ? `2px solid blue` : "",
