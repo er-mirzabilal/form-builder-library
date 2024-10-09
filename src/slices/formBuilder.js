@@ -48,15 +48,81 @@ const formSlice = createSlice({
       state.template.pages[pageId] = newPage;
       state.selectedPageId = newPage.id;
     },
-    addWidget(state, action) {
-     const {pageId, widgetType, widgetId} = action.payload;
-      const newWidget = {
+    addWidget: (state, action) => {
+      const { pageId, widgetType, widgetId ,targetWidgetId, position } = action.payload;
+      const page = state.template.pages[pageId];
+
+      if (!page) {
+        console.error("Page not found!");
+        return;
+      }
+
+      const widgets = page.widgets;
+      const targetWidget = widgets[targetWidgetId];
+
+      if (!targetWidget && Object.keys(widgets)?.length) {
+        console.error("Target widget not found!");
+        return;
+      }
+
+      if(!targetWidget){
+        console.log('first element');
+        const newWidget = {
+              ...WidgetDefault,
+              id:widgetId,
+              name: widgetType,
+              type:widgetType
+            }
+           state.template.pages[pageId].widgets[widgetId] = newWidget;
+        return;
+      }
+
+      const targetRow = targetWidget.position.row;
+      const newWidgetRow = position === "above" ? targetRow : targetRow + 1;
+
+      // Step 1: Update positions of existing widgets
+      Object.keys(widgets).forEach(widgetId => {
+        const widget = widgets[widgetId];
+
+        if (widget.position.row >= newWidgetRow) {
+          widget.position.row += 1; // Increment the row for widgets below the new position
+        }
+      });
+
+      // Step 2: Add the new widget at the correct position
+      widgets[widgetId] = {
         ...WidgetDefault,
         id:widgetId,
         name: widgetType,
-        type:widgetType
+        type: widgetType,
+        position: {
+          row: newWidgetRow,
+          column: 0 // Assuming column is 0; adjust as needed
+        }
+      };
+    },
+    // addWidget(state, action) {
+    //  const {pageId, widgetType, widgetId} = action.payload;
+    //   const newWidget = {
+    //     ...WidgetDefault,
+    //     id:widgetId,
+    //     name: widgetType,
+    //     type:widgetType
+    //   }
+    //  state.template.pages[pageId].widgets[widgetId] = newWidget;
+    // },
+    updateWidgetPositions: (state, action) => {
+      const { pageId, widgetId, newPosition } = action.payload;
+
+      // Find the page
+      const page = state.template.pages[pageId];
+      if (page && page.widgets) {
+          // Find the widget and update its position
+          const widget = page.widgets[widgetId];
+          if (widget) {
+              widget.position = newPosition;
+          }
       }
-     state.template.pages[pageId].widgets[widgetId] = newWidget;
     },
     setSelectedPage(state, action) {
       state.selectedPageId = action.payload;
@@ -81,6 +147,7 @@ export const {
   setSelectedWidget,
   setPageName,
   setPageContent,
+  updateWidgetPositions
 } = formSlice.actions;
 
 export default formSlice.reducer;

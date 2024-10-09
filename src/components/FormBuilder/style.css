@@ -1,0 +1,52 @@
+.form-builder {
+    display: flex;
+  }
+  
+  .sidebar {
+    width: 200px;
+    padding: 20px;
+    background-color: #f5f5f5;
+  }
+  
+  .sidebar-widget {
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    cursor: pointer;
+    background-color: white;
+  }
+  
+  .formBuilder {
+    flex: 1;
+    padding: 20px;
+    border: 1px solid #ddd;
+    min-height: 300px;
+  }
+  
+  .form-widget {
+    position: relative; /* Set the widget container as relative */
+    margin-bottom: 10px; /* Optional: Adds some spacing between widgets */
+    padding: 10px;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+  }
+  
+  .drop-indicator {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background-color: blue;
+    border-radius: 3px;
+    pointer-events: none; /* Make sure the indicator doesn't interfere with mouse events */
+  }
+  
+  .drop-indicator.top {
+    top: -10px; /* Move the top indicator slightly above the widget */
+  }
+  
+  .drop-indicator.bottom {
+    bottom: -10px; /* Move the bottom indicator slightly below the widget */
+  }
+  
+  
