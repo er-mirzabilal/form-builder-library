@@ -1,38 +1,97 @@
-import {
-  Box,
-  ButtonBase,
-  Divider,
-  Grid,
-  Grid2,
-  Tooltip,
-  Typography,
-} from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import WidgetsTemplate from "../WidgetsTemplate";
-import { Add } from "@mui/icons-material";
 import AddWidgetModal from "./addWidgetModal";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import {
+  cloneWidgetWithId,
+  deleteWidgetWithId,
+  setSelectedWidgetId,
+} from "../../../slices/formBuilder";
+import { v4 as uuidv4 } from "uuid";
+import RightDrawer from "../Template/RightDrawer";
 
-const WidgetWrapper = ({ pageData, handleOpenDrawer }) => {
+const WidgetWrapper = ({
+  widgets,
+  handleDragOver,
+  handleDrop,
+  handleDragLeave,
+  handleDragEnter,
+  handleWidgetDragStart,
+  hoveredWidgetId,
+  hoverPosition,
+  pageData,
+}) => {
+  const [OpenDrawer, setOpenDrawer] = useState(false);
+
   const [addWidgetModal, setAddWidgetModal] = useState(false);
-  const handleAddWidgetClick = () => {
-    setAddWidgetModal(true);
+  const dispatch = useDispatch();
+  const handleDeleteWidget = (id) => {
+    dispatch(deleteWidgetWithId({ pageId: pageData.id, widgetId: id }));
   };
-  Object.keys(pageData.widgets).map(([key, widget]) => {});
-  console.log(pageData.widgets, "pageData.widgets");
+  const handleCloneWidget = (widgetId) => {
+    console.log("called");
+    const newWedgitId = uuidv4();
+    dispatch(
+      cloneWidgetWithId({
+        pageId: pageData.id,
+        widgetId: widgetId,
+        cloneWidgetId: newWedgitId,
+      })
+    );
+  };
+  const handleSelectWidget = (widget) => {
+    console.log(widget, "widget");
+    dispatch(setSelectedWidgetId({ widgetId: widget.id }));
+    setOpenDrawer(true);
+  };
+  // Object.keys(pageData.widgets).map(([key, widget]) => {});
+  // console.log(pageData.widgets, "pageData.widgets");
   return (
-    <Box sx={{ padding: 2, borderRadius: 3, px: 10 }}>
-      {Object.entries(pageData.widgets).length ? (
-        <Grid container sx={{ background: "red", p: 1, gap: 1 }}>
-          {Object.entries(pageData.widgets).map(([key, widget]) => (
-            <Grid
-              item
-              xs={12}
-              sx={{ background: "yellow" }}
-              onClick={handleOpenDrawer}
-            >
-              <WidgetsTemplate key={key} data={widget} />
-            </Grid>
-          ))}
+    <Box
+      className="formBuilder"
+      onDrop={handleDrop}
+      onDragOver={handleDragOver}
+      sx={{ padding: 2, borderRadius: 3, px: 10 }}
+    >
+      {widgets.length ? (
+        <Grid container sx={{ p: 1, gap: 1 }}>
+          {widgets
+            .sort(
+              (a, b) =>
+                a.position.row - b.position.row ||
+                a.position.column - b.position.column
+            )
+            .map((widget, index) => (
+              <Grid
+                item
+                xs={12}
+                key={widget.id}
+                className={`form-widget ${
+                  hoveredWidgetId === widget.id ? "hover" : ""
+                }`}
+                draggable
+                onDragStart={() => handleWidgetDragStart(widget.id)} // Dragging existing widget
+                onDragEnter={(e) => handleDragEnter(e, widget.id)}
+                onDragLeave={handleDragLeave}
+              >
+                {hoveredWidgetId === widget.id && hoverPosition === "top" && (
+                  <Box className="drop-indicator top" />
+                )}
+                {widget.id}
+                <WidgetsTemplate
+                  key={index}
+                  data={widget}
+                  handleOpenDrawer={() => handleSelectWidget(widget)}
+                  handleDeleteWidget={handleDeleteWidget}
+                  handleCloneWidget={handleCloneWidget}
+                />
+                {hoveredWidgetId === widget.id &&
+                  hoverPosition === "bottom" && (
+                    <Box className="drop-indicator bottom" />
+                  )}
+              </Grid>
+            ))}
           {/* <Box
                 sx={{
                     display: "flex",
@@ -102,6 +161,7 @@ const WidgetWrapper = ({ pageData, handleOpenDrawer }) => {
           No Data Found
         </Typography>
       )}
+      <RightDrawer open={OpenDrawer} handleClose={() => setOpenDrawer(false)} />
       <AddWidgetModal
         open={addWidgetModal}
         handleClose={() => setAddWidgetModal(false)}

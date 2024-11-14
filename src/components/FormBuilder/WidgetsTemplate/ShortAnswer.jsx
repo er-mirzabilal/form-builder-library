@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { getSelectedWidgetID } from "../../../slices/formBuilder";
+import { getSelectedWidgetId } from "../../../slices/formBuilder";
 import { Box, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 
@@ -14,7 +14,7 @@ const ShortAnswer = ({ data }) => {
     const handleElementClick = (event) => {
 
     }
-    const selectedWidgetId = useSelector(getSelectedWidgetID);
+    const selectedWidgetId = useSelector(getSelectedWidgetId);
     return (
         <Box
             onClick={(event) => handleElementClick(event)}

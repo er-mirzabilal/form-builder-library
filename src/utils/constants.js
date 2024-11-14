@@ -30,7 +30,7 @@ export const WidgetDefault = {
       references: {},
     },
     required: false,
-    halfWidth: 0,
+    halfWidth: false,
     maxLength: {
       value: "10",
       expectedTypes: ["string"],

@@ -9,11 +9,11 @@ import {
 } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { addWidget, getSelectedPageId } from "../../../slices/formBuilder";import { v4 as uuidv4 } from 'uuid';
+import { addWidget, getSelectedPageId } from "../../../slices/formBuilder";
+import { v4 as uuidv4 } from "uuid";
 import { widgetTypes } from "../../../utils/constants";
 
-
-const LeftSideBar = () => {
+const LeftSideBar = ({ handleDragStart }) => {
   const selectedPageId = useSelector(getSelectedPageId);
   const dispatch = useDispatch();
   const handleAddWidget = (widgetType) => {
@@ -32,7 +32,7 @@ const LeftSideBar = () => {
           height: "100%",
           backgroundColor: "#f8f8f8",
           borderRadius: 1,
-          flexGrow: 1
+          flexGrow: 1,
         }}
         className="box-shadow"
       >
@@ -99,9 +99,12 @@ const LeftSideBar = () => {
                   alignItems: "center",
                   gap: 1,
                   cursor: "pointer",
-                  backgroundColor: "white"
+                  backgroundColor: "white",
                 }}
-                onClick={() => handleAddWidget(widgetTypes.SHORTANSWER)}
+                className="sidebar-widget"
+                key={"short-answer"}
+                draggable
+                onDragStart={() => handleDragStart(widgetTypes.SHORTANSWER)}
               >
                 <Box
                   sx={{

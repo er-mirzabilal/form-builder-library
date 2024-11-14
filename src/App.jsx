@@ -23,7 +23,7 @@ const App = () => {
         }}
       >
         {/* <ToolBar /> */}
-        <LeftSideBar />
+        {/* <LeftSideBar /> */}
         <FormBuilder data={null} />
         <RightSidebar />
       </Box>
